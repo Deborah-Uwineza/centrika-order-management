@@ -1,0 +1,24 @@
+# Maven build output
+target/
+
+# Compiled class files
+*.class
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Maven wrapper jar (downloaded automatically by mvnw/mvnw.cmd on first run —
+# no need to commit the binary itself)
+.mvn/wrapper/maven-wrapper.jar

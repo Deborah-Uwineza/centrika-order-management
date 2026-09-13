@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:centrika_orders_test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      # Only for the test profile: H2 has no schema.sql-created tables of
+      # its own, so tests need Hibernate to create them from the entities.
+      # Production and local dev still use ddl-auto: validate against the
+      # real schema.sql (see application.yml).
+      ddl-auto: create-drop

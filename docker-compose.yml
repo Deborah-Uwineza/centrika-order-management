@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: centrika-orders-db
+    environment:
+      POSTGRES_DB: centrika_orders
+      POSTGRES_USER: centrika
+      POSTGRES_PASSWORD: centrika
+    ports:
+      - "5432:5432"
+    volumes:
+      # Postgres runs every .sql file in this directory, in name order,
+      # the FIRST time the container starts with an empty data volume —
+      # this is what makes `docker-compose up` alone satisfy "runnable
+      # via docker-compose up" with no manual DB setup step.
+      - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U centrika -d centrika_orders"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: centrika-orders-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/centrika_orders
+      DB_USER: centrika
+      DB_PASSWORD: centrika
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-data:

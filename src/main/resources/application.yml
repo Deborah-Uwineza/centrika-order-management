@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: order-management
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/centrika_orders}
+    username: ${DB_USER:centrika}
+    password: ${DB_PASSWORD:centrika}
+    hikari:
+      # Deliberately modest pool size. Postgres connections aren't free —
+      # a pool this size is easy to reason about and to watch for
+      # saturation via HikariCP's own metrics (see DESIGN.md, Part 3.1).
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 5000
+
+  jpa:
+    # schema.sql (mounted into the DB container, see docker-compose.yml)
+    # already owns the schema, so Hibernate must never try to manage
+    # DDL itself — "validate" just checks the entities match, it never
+    # writes.
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 25
+        order_inserts: true
+        order_updates: true
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8080
+
+logging:
+  level:
+    rw.centrika.orders: INFO
+    org.hibernate.SQL: DEBUG
