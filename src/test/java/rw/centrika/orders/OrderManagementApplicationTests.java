@@ -10,8 +10,5 @@ class OrderManagementApplicationTests {
 
     @Test
     void contextLoads() {
-        // Fails fast if wiring is broken (missing bean, bad JPA mapping,
-        // misconfigured converter, etc.) — cheap smoke test to run in CI
-        // before anything else.
     }
 }

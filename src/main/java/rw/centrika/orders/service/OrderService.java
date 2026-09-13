@@ -26,9 +26,7 @@ public class OrderService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
 
-    // -----------------------------------------------------------------
-    // GET /api/orders — server-side filtered + paginated list
-    // -----------------------------------------------------------------
+   
     @Transactional(readOnly = true)
     public Page<OrderResponse> listOrders(OrderStatus status, Long customerId,
                                            OffsetDateTime from, OffsetDateTime to,
@@ -38,9 +36,7 @@ public class OrderService {
 
         List<Long> orderIds = page.getContent().stream().map(Order::getId).toList();
 
-        // One extra query for the whole page, not one per row (see
-        // OrderRepository.sumTotalsForOrderIds Javadoc). Skipped entirely
-        // on an empty page — an empty IN(...) clause is invalid SQL.
+       
         Map<Long, BigDecimal> totalsByOrderId = orderIds.isEmpty()
             ? Map.of()
             : orderRepository.sumTotalsForOrderIds(orderIds).stream()
@@ -50,9 +46,7 @@ public class OrderService {
             order, totalsByOrderId.getOrDefault(order.getId(), BigDecimal.ZERO)));
     }
 
-    // -----------------------------------------------------------------
-    // GET /api/orders/{id} — full detail including line items
-    // -----------------------------------------------------------------
+  
     @Transactional(readOnly = true)
     public OrderResponse getOrderDetail(Long id) {
         Order order = orderRepository.findDetailedById(id)
@@ -60,26 +54,6 @@ public class OrderService {
         return OrderResponse.detailed(order);
     }
 
-    // -----------------------------------------------------------------
-    // POST /api/orders — create order + atomically deduct stock
-    // -----------------------------------------------------------------
-    // See DESIGN.md ("Concurrency & stock deduction") for the full
-    // pessimistic-vs-optimistic discussion. Summary of what happens here:
-    //
-    //   1. We lock every product row involved BEFORE checking any stock,
-    //      using SELECT ... FOR UPDATE (ProductRepository.findByIdForUpdate).
-    //      A second, concurrent request for the same product blocks at
-    //      the database level until this transaction commits — so two
-    //      requests can never both read "stock = 1" and both succeed.
-    //   2. Products are locked in ascending id order regardless of the
-    //      order they appear in the request. Two orders that both touch
-    //      products {5, 9} will therefore always try to lock 5 before 9,
-    //      which is what prevents a classic lock-ordering deadlock (order
-    //      A locks 5 then waits on 9, order B locks 9 then waits on 5).
-    //   3. Everything happens in one @Transactional method: if any line
-    //      item fails (insufficient stock, unknown product), the whole
-    //      order — including any stock already deducted in this method —
-    //      is rolled back.
     @Transactional
     public OrderResponse placeOrder(OrderRequest request) {
         Customer customer = customerRepository.findById(request.customerId())
@@ -115,9 +89,7 @@ public class OrderService {
         return getOrderDetail(saved.getId());
     }
 
-    // -----------------------------------------------------------------
-    // PUT /api/orders/{id}/status
-    // -----------------------------------------------------------------
+  
     @Transactional
     public OrderResponse updateStatus(Long id, OrderStatus newStatus) {
         Order order = orderRepository.findById(id)

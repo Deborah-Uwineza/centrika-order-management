@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-/**
- * Uniform error shape for every 4xx/5xx response, so API consumers only
- * ever need to parse one structure regardless of what went wrong.
- */
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ApiError(
     OffsetDateTime timestamp,

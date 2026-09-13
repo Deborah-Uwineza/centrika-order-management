@@ -9,10 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      # Postgres runs every .sql file in this directory, in name order,
-      # the FIRST time the container starts with an empty data volume —
-      # this is what makes `docker-compose up` alone satisfy "runnable
-      # via docker-compose up" with no manual DB setup step.
+     
       - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U centrika -d centrika_orders"]

@@ -41,11 +41,7 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 
-    /**
-     * The whole point of pessimistic locking (see OrderService) is that
-     * this mutation only ever happens while we hold a row lock on this
-     * product. Never call this outside a transaction that acquired one.
-     */
+    
     public void deductStock(int quantity) {
         if (quantity > this.stockQuantity) {
             throw new InsufficientStockException(this.sku, quantity, this.stockQuantity);

@@ -29,11 +29,7 @@ public class OrderItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    /**
-     * Deliberately NOT read from product.getUnitPrice() at render time —
-     * this column freezes the price the customer actually paid. If the
-     * catalogue price changes next week, this order's total must not.
-     */
+
     @Column(name = "unit_price", nullable = false, precision = 12, scale = 2)
     private BigDecimal unitPrice;
 }

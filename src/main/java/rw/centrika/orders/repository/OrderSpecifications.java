@@ -6,12 +6,7 @@ import rw.centrika.orders.domain.OrderStatus;
 
 import java.time.OffsetDateTime;
 
-/**
- * Composable, server-side filters for GET /api/orders. Building the
- * WHERE clause this way (instead of pulling everything into memory and
- * filtering in Java) is what makes the endpoint safe at tens of
- * millions of rows — see DESIGN.md, Part 3.3 on OFFSET pagination too.
- */
+
 public final class OrderSpecifications {
 
     private OrderSpecifications() {}

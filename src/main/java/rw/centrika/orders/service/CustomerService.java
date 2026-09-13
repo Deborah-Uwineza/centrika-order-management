@@ -25,9 +25,7 @@ public class CustomerService {
         Customer customer = customerRepository.findById(customerId)
             .orElseThrow(() -> ResourceNotFoundException.forEntity("Customer", customerId));
 
-        // Guaranteed exactly one row back (see OrderRepository Javadoc),
-        // since we already confirmed the customer exists above — but we
-        // still guard against an empty list rather than assume it.
+        
         List<Object[]> rows = orderRepository.aggregateCustomerSummary(customerId);
         Object[] row = rows.isEmpty() ? new Object[]{BigDecimal.ZERO, 0L, null} : rows.get(0);
 

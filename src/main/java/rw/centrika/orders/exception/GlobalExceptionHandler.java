@@ -13,11 +13,6 @@ import rw.centrika.orders.dto.ApiError;
 
 import java.util.List;
 
-/**
- * Every handler here returns the same ApiError shape (see dto/ApiError),
- * so API consumers never have to special-case how a 400 looks versus a
- * 404 or a 409 — only the status code and message change.
- */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

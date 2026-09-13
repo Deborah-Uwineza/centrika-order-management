@@ -33,9 +33,7 @@ public class Order {
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 
-    // Orders are never fetched "with all their items" in bulk list views
-    // (that would defeat pagination) — this association is only ever
-    // touched when loading a single order by id. See OrderRepository.
+
     @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> items = new ArrayList<>();
